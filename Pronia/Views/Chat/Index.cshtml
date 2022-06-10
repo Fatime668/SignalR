@@ -1,0 +1,63 @@
+﻿@model List<AppUser>
+@{
+    ViewData["Title"] = "Index";
+}
+<main class="main-content" style="height:200vh">
+    <div class="container">
+        <div class="row ">
+            <div class="chatSection col-lg-5">
+                <form id="chat">
+
+                    <input type="text" id="name" placeholder="username" class="form-control" /><br />
+                    <input type="text" id="message" placeholder="message" class="form-control" /><br />
+                    <button type="submit" class="btn btn-outline-success" id="send">Send Message</button>
+
+                </form>
+            </div>
+            <div class="col-lg-5 d-flex justify-content-end">
+                <ul class="list-unstyled">
+                    @foreach (AppUser user in Model)
+                    {
+                        <li>
+                            <span id="@user.Id" class="@(user.ConnectionId == null ? "offline-mode" : "online-mode") status-mode"></span>@user.UserName
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
+        connection.start();
+        let sendBtn = document.getElementById("send");
+        sendBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            let username = document.getElementById("name").value
+            let message = document.getElementById("message").value
+            connection.invoke("SendMessage", username, message);
+        });
+        connection.on("ReceiveMessage", function (name, message) {
+            let div = document.createElement("div")
+            div.className = "mt-3"
+            let h4 = document.createElement("h4")
+            h4.innerText = name;
+            let p = document.createElement("p")
+            p.innerText = message;
+            div.append(h4, p);
+            document.querySelector(".chatSection").append(div);
+        })
+        connection.on("UserConnected", function (id) {
+            let user = document.getElementById(id)
+            user.classList.remove("offline-mode")
+            user.classList.add("online-mode")
+        })
+        connection.on("UserDisconnected", function (id) {
+            let user = document.getElementById(id)
+            user.classList.remove("online-mode")
+            user.classList.add("offline-mode")
+        })
+    </script>
+}

@@ -1,0 +1,117 @@
+﻿@model Plant
+@{
+    ViewData["Title"] = "Create";
+}
+<div asp-validation-summary="ModelOnly" class="alert-danger"></div>
+<form method="post" enctype="multipart/form-data">
+    <div>
+        <label class="mb-3">Plant name: </label><br />
+        <input asp-for="Name" class="form-control" /><br />
+        <span class="text-danger" asp-validation-for="Name"></span>
+    </div>
+    <div>
+        <label class="mb-3">Plant price: </label><br />
+        <input asp-for="Price" class="form-control" /><br />
+        <span class="text-danger" asp-validation-for="Price"></span>
+    </div>
+    <div>
+        <label class="mb-3">Plant description: </label><br />
+        <input asp-for="Description" class="form-control" /><br />
+        <span class="text-danger" asp-validation-for="Description"></span>
+    </div>
+    <div>
+        <label class="mb-3">Plant skuCode: </label><br />
+        <input asp-for="SKUCode" class="form-control" /><br />
+        <span class="text-danger" asp-validation-for="SKUCode"></span>
+    </div>
+    <div>
+        <label class="mb-3">Plant shipping: </label><br />
+        <input asp-for="Shipping" class="form-control" /><br />
+        <span class="text-danger" asp-validation-for="Shipping"></span>
+    </div>
+    <div>
+        <label class="mb-3">Plant request: </label><br />
+        <input asp-for="Request" class="form-control" /><br />
+        <span class="text-danger" asp-validation-for="Request"></span>
+    </div>
+    <div>
+        <label class="mb-3">Plant guarantee: </label><br />
+        <input asp-for="Guarantee" class="form-control" /><br />
+        <span class="text-danger" asp-validation-for="Guarantee"></span>
+    </div>
+    <div>
+        <label class="mb-3">Plant colors: </label><br />
+        <select class="form-select" asp-for="ColorId" asp-items="@(new SelectList(ViewBag.Colors,"Id","Name"))"></select>
+        <span class="text-danger" asp-validation-for="ColorId"></span>
+    </div>
+    <div>
+        <label class="mb-3">Plant sizes: </label><br />
+        <select class="form-select" asp-for="SizeId" asp-items="@(new SelectList(ViewBag.Sizes,"Id","Name"))"></select>
+        <span class="text-danger" asp-validation-for="SizeId"></span>
+    </div>
+    <div>
+        <label class="mb-3">Plant categories: </label><br />
+        <select class="form-select" asp-for="CategoryIds">
+            @foreach (Category category in ViewBag.Categories)
+            {
+                if (Model.PlantCategories.FirstOrDefault(pc => pc.CategoryId == category.Id) != null)
+                {
+                    <option value="@category.Id" selected>@category.Name</option>
+                }
+                else
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            }
+        </select>
+        <span class="text-danger" asp-validation-for="CategoryIds"></span>
+    </div>
+    <div>
+        <label class="mb-3">Plant main image: </label><br />
+        <input asp-for="MainImage" class="form-control" accept="image/*" /><br />
+        <span class="text-danger" asp-validation-for="MainImage"></span>
+    </div>
+    <div>
+        <label class="mb-3">Plant another images: </label><br />
+        <input asp-for="AnotherImages" class="form-control" accept="image/*" /><br />
+        <span class="text-danger" asp-validation-for="AnotherImages"></span>
+    </div>
+
+
+
+    <div>
+        <div class="d-flex">
+            <div class="col-lg-2" style="position:relative;">
+                <label class="mb-3">Plant main image: </label><br />
+                <i class="mdi mdi-close closeBtn" style="position:absolute;top:10px;right:5px;color:red;font-size:20px;"></i>
+                <img style="width:100%; height:150px" src="~/assets/images/website-images/@Model.PlantImages.FirstOrDefault(i => i.IsMain == true)?.ImagePath" />
+                <input type="hidden" value="@Model.PlantImages.FirstOrDefault(i => i.IsMain == true)?.Id" name="ImageId" />
+            </div>
+        </div>
+
+    </div>
+    <span>Plant another images</span><br />
+    <div>
+        <div class="d-flex">
+            @foreach (var image in Model.PlantImages.Where(i => i.IsMain == false))
+            {
+                <div class="col-lg-3" style="position:relative;">
+                    <i class="mdi mdi-close closeBtn" style="position:absolute;top:10px;right:5px;color:red;font-size:20px;"></i>
+                    <img style="width:100%; height:150px" src="~/assets/images/website-images/@image.ImagePath" />
+                    <input type="hidden" value="@image.Id" name="ImageIds" />
+                </div>
+            }
+        </div>
+    </div>
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Edit plant</button>
+    </div>
+</form>
+@section Scripts{
+    <script>
+        $(".closeBtn").click(function () {
+            this.parentNode.remove();
+        })
+    </script>
+}
+

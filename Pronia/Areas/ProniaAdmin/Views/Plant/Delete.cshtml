@@ -1,0 +1,82 @@
+﻿@model Plant
+@{
+    ViewData["Title"] = "Delete";
+}
+<div>
+    <div>
+        <h4>Id: </h4>
+        <p>
+            @Model.Id
+        </p>
+    </div>
+    <div>
+        <h4>Name: </h4>
+        <p>
+            @Model.Name
+        </p>
+    </div>
+    <div>
+        <h4>Secription: </h4>
+        <p>
+            @Model.Description
+        </p>
+    </div>
+    <div>
+        <h4>Price: </h4>
+        <p>
+            @Model.Price
+        </p>
+    </div>
+    <div>
+        <h4>Size: </h4>
+        <p>
+            @Model.Size
+        </p>
+    </div>
+    <div>
+        <h4>Color: </h4>
+        <p>
+            @Model.Color
+        </p>
+    </div>
+    <div>
+        <h4>Request: </h4>
+        <p>
+            @Model.Request
+        </p>
+
+    </div>
+    <div>
+        <h4>Guarantee: </h4>
+        <p>
+            @Model.Guarantee
+        </p>
+
+    </div>
+    <div>
+        <h4>Shipping: </h4>
+        <p>
+            @Model.Shipping
+        </p>
+
+    </div>
+    <div>
+        <h4>SKUCode: </h4>
+        <p>
+            @Model.SKUCode
+        </p>
+
+    </div>
+    <div>
+        <h4>Main Image: </h4>
+        <img style="width:150px; height:150px;" src="~/assets/images/website-images/@Model.PlantImages.FirstOrDefault(p => p.IsMain == true)?.ImagePath" alt="Product Images" />
+    </div>
+    <div>
+        <h4>Another Images: </h4>
+        <img style="width:150px; height:150px;" src="~/assets/images/website-images/@Model.PlantImages.FirstOrDefault(p => p.IsMain == false)?.ImagePath" alt="Product Images" />
+
+    </div>
+</div>
+<form method="post" class="mt-4">
+    <button type="submit" class="btn btn-danger">Delete</button>
+</form>
